@@ -25,21 +25,28 @@ class Donation extends Model
     }
 
     /**
-     * create a donation record after user paid
+     * create a donation record and return ID of created record
      *
-     * @param  int  $paymentId  The ID of the payment.
-     * @param int $user_id the id value from users table 
-     * @return void  just create a new record in donation table 
+     * @param  int  $donatable_type The ID of the payment.
+     * @param int $donatable_id the id value from users table 
+     * @param string $type type of donation
+     * @return int   return id of created donate 
      */
-    public function createDonation(?string $donatable_Type, ?int $donatable_id, string $type)
+    public function createDonation(?string $donatable_Type, ?int $donatable_id, string $type):int 
     {
-        Donation::create([
-            'donatable_type'=> $donatable_Type,
-            'donatable_id'=> $donatable_id,
-            'type'=> $type
-            ]);
+        // Create the donation record
+        $donation = Donation::create([
+            'donatable_type' => $donatable_Type,
+            'donatable_id' => $donatable_id,
+            'type' => $type,
+        ]);
+
+        // Retrieve and return the ID of the created record
+        return $donation->id;
 
     }
+
+   
 
     
 }

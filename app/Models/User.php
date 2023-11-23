@@ -84,9 +84,9 @@ class User extends Authenticatable
      * @param string $name the name of user
      * @param string $phone the phone of user
      */
-    public function returnUserID(string $fname, string $phone)
+    public function returnUserID(string $fname, string $lname, string $phone)
     {   
-        $result = Squad::where('name',$fname)->where('phone',$phone)->first();
+        $result = User::where('firstname',$fname)->where('phone',$phone)->where('lastname',$lname)->first();
         return $result->id;
     }
 
@@ -98,13 +98,13 @@ class User extends Authenticatable
      */
     public function checkToCreate(string $fname, string $lname, int $phone)
     {
-        $result = Squad::where('name', $fname)->where('phone', $phone)->exists();
+        $result = User::where('firstname', $fname)->where('phone', $phone)->where('lastname', $lname)->exists();
         if(!$result)
         {
-            Squad::create([
-                'name'=>$fname,
-                'phone'=>$phone,
-                'owner'=>$lname
+            User::create([
+                'firstname'=>$fname,
+                'lastname'=>$lname,
+                'phone'=>$phone
             ]);
         }
     }

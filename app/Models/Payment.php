@@ -30,20 +30,32 @@ class Payment extends Model
     }
 
     /**
-     * update a paymetn record
+     * set a payment as a failed payment
      *
-     * @param  object  $response  zaripal object
-     * @param string $authority unique code for payment  
+     * @param  string $authority a payment unique code
      * @return void  just upadate a new record in payment table 
      */
-    public function updatePayment($response, string $authority)
+    public function failedPayment(string $authority)
     {
         // insertion and update in database
         Payment::where('authority', $authority)
             ->update([
-                'ref_id' =>$response->referenceId(),
+                'status' => 'failed',
+            ]);
+    }
+
+    /**
+     * update a payment record as successfull payment
+     *
+     * @param string $authority unique code for payment  
+     * @return void  just upadate a new record in payment table 
+     */
+    public function successPayment(string $authority)
+    {
+        // insertion and update in database
+        Payment::where('authority', $authority)
+            ->update([
                 'status' => 'success',
-                'card_hash'=>$response->cardHash(),
             ]);
     }
 
@@ -53,9 +65,12 @@ class Payment extends Model
      *
      * @param  int  $amount  amount of cash that user wants to pay
      * @param string $description description about payment  
+     * @param resposerequest $response an object of zarinpal reponse
+     * @param string $payable_type type of payment 
+     * @param int $payable_id payable id 
      * @return void  just create a new record in payment table 
      */
-    public function paymentCreation($amount, ?string $description, $response, string $payable_type)
+    public function paymentCreation($amount, ?string $description, $response, string $payable_type, int $payable_id)
     {
         //save info in database 
         Payment::create([
@@ -64,7 +79,7 @@ class Payment extends Model
             'status'=> 'pending',
             'authority'=> $response->authority(),
             'payable_type'=>$payable_type,
-            
+            'payable_id'=>$payable_id
         ]);
     }
 }

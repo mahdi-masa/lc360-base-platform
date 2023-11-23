@@ -54,13 +54,14 @@ Route::prefix('v1')->group(function () {
         Route::post('/', 'store')->name('store');
     });
 
-    Route::controller(DonationController::class)->prefix('/payments')->name('payment.')->group(function () {
-        Route::post('/donate/{type}', 'donate')->where('type', implode('|', DonationTypeEnum::cases()))->name('donate');
+    Route::controller(DonationController::class)->prefix('donate')->group(function () {
+        Route::post('/{type}', 'donate')->name('donate')->where('type',DonationTypeEnum::getString());
                 
+        // 
     });
 
     Route::controller(PaymentController::class)->prefix('/payments')->name('payment.')->group(function () {
-        Route::post('/payment\{type}/verify', 'paymentVerification')->name('donate');
+        Route::post('/verify', 'paymentVerification')->name('verify');
                 
     });
 

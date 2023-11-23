@@ -21,7 +21,7 @@ class zarinpalTransaction
      * @param string $callbackURL url that zaripal redirec after proccessing 
      * @return  RequestResponse return a RequestResponse 
      */
-    public function zarinpalTransaction(int $amount, string $description, int $phone, string $callbackURL)
+    public function zarinpalTransaction(int $amount, string $description, int $phone, string $callbackURL):RequestResponse
     {
         $response = zarinpal()
             ->amount($amount) // مبلغ تراکنش

@@ -12,7 +12,7 @@ class PaymentController extends Controller
 {
 
 
-    public function paymentVerification(Payment $payment, Donation $donate, zarinPalVerification $verify){
+    public function paymentVerification(Payment $payment, zarinPalVerification $verify){
 
         // get information from url
         $authority = request()->query('Authority');
@@ -24,14 +24,12 @@ class PaymentController extends Controller
         $paymentId = $transactionData->id;
 
         // zarinpal verification
-        $info = $verify->zarinPalVerify($authority, $amount);
+        $info = $verify->zarinPalVerify($authority, $amount, new Payment());
 
         // update payment record in table
         $payment->updatePayment($info, $authority);
         
         
-        return response()->json([
-            "message" => "تراکنش با موفقیت انجام شد از حمایت  شما متشکریم"
-        ],201);
+        
     }
 }

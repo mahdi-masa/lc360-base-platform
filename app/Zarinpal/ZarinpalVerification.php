@@ -5,7 +5,7 @@ namespace App\Zarinpal;
 use App\Models\Payment;
 
 
-class zarinPalVerification 
+class zarinPalVerification
 {
 
 
@@ -16,7 +16,7 @@ class zarinPalVerification
      * @param int $amount cash amount 
      * @return void  just create a new record in payment table 
      */
-    public function zarinPalVerify($authority, $amount)
+    public function zarinPalVerify($authority, $amount, Payment $payment)
     {
         //zarin pal communication
         $response = zarinpal()
@@ -26,15 +26,17 @@ class zarinPalVerification
             ->send();
 
         if (!$response->success()) {
-            Payment::where('authority', $authority)->update([
-                'status'=>'failed'
-            ]);
+            $payment->failedPayment($authority);
             return response()->json([
                 'message'=>'تراکنش با مشکل مواجه شده است در صورت کسر از حساب مبلغ تا 48 آینده به حساب شما بازمیگردد'
             ], 422);
+        }else{
+            $payment->successPayment($authority);
+            return response()->json([
+                "message" => "تراکنش با موفقیت انجام شد از حمایت  شما متشکریم"
+            ],201);
         }
 
-        return $response;
 
     }
 }
