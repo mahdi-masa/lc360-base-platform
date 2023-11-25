@@ -86,7 +86,7 @@ class User extends Authenticatable
      */
     public function returnUserID(string $fname, string $lname, string $phone)
     {   
-        $result = User::where('firstname',$fname)->where('phone',$phone)->where('lastname',$lname)->first();
+        $result = User::where('firstname',$fname)->where('lastname',$lname)->first();
         return $result->id;
     }
 

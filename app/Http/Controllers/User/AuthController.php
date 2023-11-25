@@ -122,7 +122,7 @@ class AuthController extends Controller
             Log::error($e->getMessage());
             return response()->json([
                 'message' => __('auth.messages.otp_verification_failed'),
-            ], 400);
+            ], 500);
         }
     }
 

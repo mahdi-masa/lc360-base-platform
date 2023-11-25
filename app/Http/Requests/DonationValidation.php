@@ -26,7 +26,7 @@ class DonationValidation extends FormRequest
         $commonRules = [
             'fname' => 'different:lname|max:20|required|string',
             'lname' => 'different:fname|max:20|required|string',
-            'phone' => 'required|digits:11|integer',
+            'phone' => 'required|phone:IR,mobile',
             'amount' => 'required|integer',
         ];
 
@@ -36,13 +36,13 @@ class DonationValidation extends FormRequest
             case DonationTypeEnum::PLANT->value:
                 return array_merge($commonRules, [
                     'group' => 'required|boolean',
-                    'donated_group_name' => 'string|max:50|required_if:group,true',
-                    'donated_group_owner' => 'string|max:30|required_if:group,true',
-                    'donated_group_phone' => 'integer|digits:11|required_if:group,true',
+                    'donated_group_name' => 'string|max:50|required_if:group,true|missing_if:person,true',
+                    'donated_group_owner' => 'string|max:30|required_if:group,true|missing_if:person,true',
+                    'donated_group_phone' => 'phone:IR,mobile|required_if:group,true|missing_if:person,true',
                     'person' => 'required|boolean',
-                    'donated_person_fname' => 'string|max:10|required_if:person,true',
-                    'donated_person_lname' => 'string|max:10|required_if:person,true',
-                    'donated_person_phone' => 'integer|digits:11|required_if:person,true',
+                    'donated_person_fname' => 'string|max:10|required_if:person,true|missing_if:group,true',
+                    'donated_person_lname' => 'string|max:10|required_if:person,true|missing_if:group,true',
+                    'donated_person_phone' => 'phone:IR,mobile|required_if:person,true|missing_if:group,true',
                 ]);
         
         }
