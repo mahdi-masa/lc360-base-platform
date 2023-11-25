@@ -56,11 +56,10 @@ Route::prefix('v1')->group(function () {
 
     Route::controller(DonationController::class)->prefix('donate')->group(function () {
         Route::post('/{type}', 'donate')->name('donate')->where('type',DonationTypeEnum::getString());
-                
-        // 
+         
     });
 
-    Route::controller(PaymentController::class)->prefix('/payments')->name('payment.')->group(function () {
+    Route::controller(PaymentController::class)->prefix('/payment')->name('payment.')->group(function () {
         Route::post('/verify', 'paymentVerification')->name('verify');
                 
     });

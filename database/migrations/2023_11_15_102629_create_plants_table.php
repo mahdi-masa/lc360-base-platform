@@ -17,7 +17,7 @@ return new class extends Migration
             $table->double('latitude', 10, 6)->index();
             $table->double('longitude', 10, 6)->index();
             $table->string('type')->index();
-            $table->unsignedInteger('user_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('count');
             $table->unsignedInteger('area');

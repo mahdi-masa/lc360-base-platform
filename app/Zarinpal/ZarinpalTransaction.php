@@ -4,12 +4,13 @@ namespace App\Zarinpal;
 
 use App\Models\Payment;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Http\JsonResponse;
 use Pishran\Zarinpal\RequestResponse;
 
 
-class zarinpalTransaction 
+class zarinpalTransaction  
 {
-
+    public $authority;
 
     /**
      * connect to zarinpal server to create a new transaction 
@@ -41,8 +42,11 @@ class zarinpalTransaction
     }
 
 
-    public function zarinpalRedirect(RequestResponse $response)
+    public function zarinpalRedirect(RequestResponse $response):JsonResponse
     {
-        return $response->redirect();
+        $authority = $response->authority();
+        return response()->json([
+            "redirectURL"=>"https://www.zarinpal.com/pg/StartPay/$authority",
+        ],302);
     }
 }

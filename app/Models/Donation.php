@@ -40,7 +40,7 @@ class Donation extends Model
             'donatable_id' => $donatable_id,
             'type' => $type,
         ]);
-
+        return $donation;
         // Retrieve and return the ID of the created record
         return $donation->id;
 

@@ -50,12 +50,14 @@ class Payment extends Model
      * @param string $authority unique code for payment  
      * @return void  just upadate a new record in payment table 
      */
-    public function successPayment(string $authority)
+    public function successPayment(string $authority, string $ref_id, string $hash_card)
     {
         // insertion and update in database
         Payment::where('authority', $authority)
             ->update([
                 'status' => 'success',
+                "ref_id"=>$ref_id,
+                "card_hash"=>$hash_card
             ]);
     }
 

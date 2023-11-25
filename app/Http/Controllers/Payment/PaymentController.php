@@ -21,15 +21,21 @@ class PaymentController extends Controller
         //get info from database
         $transactionData = Payment::where('authority', $authority)->first();
         $amount = $transactionData->amount;
-        $paymentId = $transactionData->id;
+        
 
         // zarinpal verification
         $info = $verify->zarinPalVerify($authority, $amount, new Payment());
-
-        // update payment record in table
-        $payment->updatePayment($info, $authority);
-        
-        
+        if(!$info)
+        {
+            return response()->json([
+                'message'=>'تراکنش با مشکل مواجه شده است در صورت کسر از حساب مبلغ تا 48 آینده به حساب شما بازمیگردد'
+            ], 422);
+        }else{
+            return response()->json([
+                "message" => "تراکنش با موفقیت انجام شد از حمایت  شما متشکریم"
+            ],200);
+        }
+    
         
     }
 }

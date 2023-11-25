@@ -3,7 +3,8 @@
 namespace App\Zarinpal;
 
 use App\Models\Payment;
-
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class zarinPalVerification
 {
@@ -27,14 +28,10 @@ class zarinPalVerification
 
         if (!$response->success()) {
             $payment->failedPayment($authority);
-            return response()->json([
-                'message'=>'تراکنش با مشکل مواجه شده است در صورت کسر از حساب مبلغ تا 48 آینده به حساب شما بازمیگردد'
-            ], 422);
+            return false;
         }else{
-            $payment->successPayment($authority);
-            return response()->json([
-                "message" => "تراکنش با موفقیت انجام شد از حمایت  شما متشکریم"
-            ],201);
+            $payment->successPayment($authority,$response->referenceId(), $response->cardPan());
+            return true;
         }
 
 

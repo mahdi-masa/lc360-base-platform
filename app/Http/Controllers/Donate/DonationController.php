@@ -27,24 +27,39 @@ class DonationController extends Controller
         $supporterLname = trim($data['lname']);
         $amount = trim($data['amount']);
         $description = "حمایت از $supporterFname $supporterLname";
-        $callbackURL = 's';
+        $callbackURL = 'http://localhost/api/v1/payment/verify';
         $response = $zarinpal->zarinpalTransaction($amount, $description, $phone, $callbackURL);
         $type = $request->route('type');
-        //get data for group or person who are supported
-        if($type === 'plant')
-        {
-            if($data['person']){
-                $supportedPersonFName = trim($data['donated_person_fname']);
-                $supportedPersonLName = trim($data['donated_person_lname']);
-                $supportedPersonPhone = trim($data['donated_person_phone']);
-                
-                $user->checkToCreate($supportedPersonFName, $supportedPersonLName,$supportedPersonPhone);
-                $donatable_id = $user->returnUserID($supportedPersonFName,$supportedPersonLName, $supportedPersonPhone);
-                $donateID = $donate->createDonation('App\Models\Users', $donatable_id, 'plant');
+        // return response()->json([
+        //     "data"=>var_dump($type)
+        // ]);
+        
+
+        switch ($type) {
+            case 'cash':
+                $response = $zarinpal->zarinpalTransaction($amount, $description, $phone, $callbackURL, 'App\Models\Donation');
+                $donateID = $donate->createDonation(Null, Null, 'cash');
                 $payment->paymentCreation($amount,$description,$response,'App\Models\Donation', $donateID);
-                
-    
-            }
+                return $zarinpal->zarinpalRedirect($response);
+                break;
+            case 'plant':
+                if($data['person']){
+                    $supportedPersonFName = trim($data['donated_person_fname']);
+                    $supportedPersonLName = trim($data['donated_person_lname']);
+                    $supportedPersonPhone = trim($data['donated_person_phone']);
+                    
+                    $user->checkToCreate($supportedPersonFName, $supportedPersonLName,$supportedPersonPhone);
+                    $donatable_id = $user->returnUserID($supportedPersonFName,$supportedPersonLName, $supportedPersonPhone);
+                    $donateID = $donate->createDonation('App\Models\User', $donatable_id, 'plant');
+                    $payment->paymentCreation($amount,$description,$response,'App\Models\Donation', $donateID);
+                    return $zarinpal->zarinpalRedirect($response);
+        
+                }
+                break;
+        }
+        
+       
+            
             // elseif($data['group'])
             // {
                 
@@ -62,19 +77,6 @@ class DonationController extends Controller
                 
 
             // }
-            else
-            {
-                $response = $zarinpal->zarinpalTransaction($amount, $description, $phone, $callbackURL, 'App\Models\Donation');
-                $donateID = $donate->createDonation(null, null, 'cash');
-                $payment->paymentCreation($amount,$description,$response,'App\Models\Donation', $donateID);
-            }
-        }
-
-        return response()->json([
-            "message"=>"redirect to zarinpal"
-        ],201);
-        // $zarinpal->zarinpalRedirect($response);
-
     }
 
 

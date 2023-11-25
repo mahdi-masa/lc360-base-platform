@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('donations', function (Blueprint $table) {
-            $table->id();
-            $table->enum('type',['plant', 'cash']);
-            $table->morphs('donatable');
-            $table->timestamps();
+{
+    Schema::create('donations', function (Blueprint $table) {
+        $table->id();
+        $table->enum('type', ['plant', 'cash']);
+        $table->unsignedBigInteger('donatable_id')->nullable();
+        $table->string('donatable_type')->nullable();
+        $table->timestamps();
+    });
+}
 
-            
-        });
-    }
 
     /**
      * Reverse the migrations.

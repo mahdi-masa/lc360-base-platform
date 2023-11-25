@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('authority');
             $table->bigInteger('amount');
             $table->string('ref_id')->nullable();
-            $table->hash('card_hash')->nullable();
-            $table->morph('payable')->index();
+            $table->string('card_hash')->nullable();
+            $table->morphs('payable');
+            $table->timestamps();
+
         });
     }
 
